@@ -1,90 +1,68 @@
 export default class TextType {
-  constructor(text, onAnimationEnd) {
-      this.message = text;
-      this.endFunction = onAnimationEnd;
-  }
-
-  render() {
+    constructor(text, onAnimationEnd, doBack=true, elementType="h1") {
+      this.strings = text; 
+      this.onAnimationEnd = onAnimationEnd;
+      this.typeSpeed = 50; 
+      this.startDelay = 1500;
+      this.backSpeed = 50;
+      this.backDelay = 1000;
+      this.doBack = doBack;
+      this.elementType = elementType;
+    }
+  
+    render() {
       const container = document.createElement('div');
       container.style.paddingTop = '5em';
       container.style.display = 'flex';
+      container.style.textAlign = 'center';
       container.style.justifyContent = 'center';
-
-      const style = document.createElement('style');
-      style.innerHTML = `
-          .typewriter h1 {
-              color: white;
-              font-family: monospace;
-              overflow: hidden; 
-              border-right: 0.15em solid orange; 
-              white-space: nowrap; 
-              margin: 0 auto; 
-              letter-spacing: 0.15em; 
-              animation: typing-deleting 7s steps(30, end),
-              blink-caret 0.5s step-end infinite;
-          }
-
-          @keyframes typing {
-              from {
-                  width: 0;
-              }
-              to {
-                  width: 100%;
-              }
-          }
-
-          @keyframes deleting {
-              from {
-                  width: 100%;
-              }
-              to {
-                  width: 0;
-              }
-          }
-
-          @keyframes typing-deleting {
-            0% {
-                width: 0; /* Start with nothing typed */
-            }
-            50% {
-                width: 100%; /* End of typing phase */
-            }
-            75% {
-                width: 100%; /* Pause for 2 seconds at full text */
-            }
-            100% {
-                width: 0; /* End of deleting phase */
-            }
-            }
-
-          @keyframes blink-caret {
-              from,
-              to {
-                  border-color: transparent;
-              }
-              50% {
-                  border-color: orange;
-              }
-          }
-      `;
-      document.head.appendChild(style);
-
+  
       const typewriterDiv = document.createElement('div');
       typewriterDiv.classList.add('typewriter');
-      
-      const h1 = document.createElement('h1');
-      h1.textContent = this.message;
+  
+      const h1 = document.createElement(this.elementType);
       typewriterDiv.appendChild(h1);
       container.appendChild(typewriterDiv);
-
       document.body.appendChild(container);
-
-      h1.addEventListener('animationend', () => {
-        if (this.endFunction) {
-            this.endFunction();
+  
+      let stringIndex = 0; 
+      let charIndex = 0;
+      let currentText = '';
+      let typingTimeout, backspacingTimeout;
+  
+      const typeText = () => {
+        if (charIndex < this.strings[stringIndex].length) {
+          currentText += this.strings[stringIndex][charIndex];
+          h1.innerHTML = currentText;
+          charIndex++;
+          typingTimeout = setTimeout(typeText, this.typeSpeed);
+        } else {
+          setTimeout(startBackspace, this.backDelay); 
         }
-      });
-
-      return container; 
+      };
+  
+      const startBackspace = () => {
+        let backspaceIndex = currentText.length;
+        const backspaceText = () => {
+          if (backspaceIndex > 0) {
+            currentText = currentText.slice(0, backspaceIndex - 1);
+            h1.innerHTML = currentText;
+            backspaceIndex--;
+            backspacingTimeout = setTimeout(backspaceText, this.backSpeed);
+          } else {
+            stringIndex = (stringIndex + 1) % this.strings.length; 
+            charIndex = 0;
+            if (this.onAnimationEnd) {
+                this.onAnimationEnd(); 
+            }
+          }
+        };
+        backspaceText();
+      };
+  
+      typeText();
+  
+      return container;
+    }
   }
-}
+  

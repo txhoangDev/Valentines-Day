@@ -1,6 +1,13 @@
 body {
   background-color: #282828;
   font-family: 'Courier New', Courier, monospace;
+  color: white;
+}
+
+#main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .heart {
@@ -11,10 +18,12 @@ body {
   cursor: pointer;
   transition: background-position 1s steps(28);
   transition-duration: 0s;
+  transform: translate(50%, 50%);
   
   &.is-active {
     transition-duration: 1s;
     background-position: -2800px 0;
+    transform: translate(50%, 50%);
   }
 }
 
