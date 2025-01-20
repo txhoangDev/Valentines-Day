@@ -68,7 +68,7 @@ export default class Question {
             }
           </style>
           <div id="wrapper">
-            <h2 id="question">Will you go out with me?</h2>
+            <h2 id="question">Will you be my valentine?</h2>
             <img
               id="gif"
               alt="gif"
