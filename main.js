@@ -19,7 +19,7 @@ const remindSong = () => {
       "THE SONG THAT REMINDS ME OF YOU",
       remindSong
     );
-  } else if (title.textContent === "One Of The Girls") {
+  } else if (title.textContent === "Belong Together") {
     makeMusicType(
       "Nonsense",
       "Sabrina Carpenter",
